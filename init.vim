@@ -55,8 +55,6 @@ if dein#load_state('/Users/philipp/.config/nvim/bundles')
 
   call dein#add('takac/vim-hardtime')
 
-  " call dein#add('bouk/deoplete-markdown-links')
-
   call dein#add('plasticboy/vim-markdown')
 
   call dein#add('bogensberger/deoplete-markdown-links')
@@ -66,7 +64,10 @@ if dein#load_state('/Users/philipp/.config/nvim/bundles')
   call dein#save_state()
 endif
 
-set rtp+=/usr/local/opt/fzf
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview(), <bang>0)
 
 let g:vim_markdown_edit_url_in = 'vsplit'
 let g:vim_markdown_follow_anchor = 1
@@ -102,7 +103,7 @@ map <LEADER>s :sp <C-R>=expand("%:p:h") . "/" <CR>
 map <LEADER>v :vsp <C-R>=expand("%:p:h") . "/" <CR>
 map <LEADER>t :FZF <CR>
 map <LEADER>f :Rg <CR>
-map <LEADER>d :ALEGoToDefinitionInVSplit<CR>
+map <LEADER>d :ALEGoToDefinition -vsplit<CR>
 map <LEADER>r :ALEFindReferences -relative<CR>
 map <LEADER>z :NewZettel 
 
@@ -133,10 +134,6 @@ let g:jedi#completions_enabled = 0
 let g:deoplete#enable_at_startup = 1
 call deoplete#custom#option('ignore_sources', {'typescript': ['around', 'buffer'], 'javascript': ['buffer', 'around'], 'markdown': ['around', 'buffer']})
 
-
-
-
-
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " select first completion
@@ -164,7 +161,8 @@ let g:ale_fixers = {
 \}
 let g:ale_linters = {
 \   'typescript': ['eslint', 'tsserver'],
-\   'tex': []
+\   'tex': [],
+\   'cpp': [],
 \}
 
 let g:ale_lint_delay = 200
@@ -172,7 +170,7 @@ let g:ale_lint_on_text_changed = 0
 let g:ale_lint_on_enter = 0
 let g:ale_lint_on_insert_leave = 0
 
-let g:ale_completion_tsserver_autoimport = 1
+let g:ale_completion_autoimport = 1
 call deoplete#custom#option('sources', {
 \ 'typescript': ['ale'],
 \})
